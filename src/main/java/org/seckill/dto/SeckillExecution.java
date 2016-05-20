@@ -13,21 +13,21 @@ public class SeckillExecution {
     //秒杀执行结果状态
     private int state;
     //状态标识
-    private String sateInfo;
+    private String stateInfo;
     //秒杀成功对象
     private SuccessKilled successKilled;
 
     public SeckillExecution(long seckillId, SeckillStatEnum statEnum, SuccessKilled successKilled) {
         this.seckillId = seckillId;
         this.state = statEnum.getState();
-        this.sateInfo = statEnum.getStateInfo();
+        this.stateInfo = statEnum.getStateInfo();
         this.successKilled = successKilled;
     }
 
     public SeckillExecution(long seckillId, SeckillStatEnum statEnum) {
         this.seckillId = seckillId;
         this.state = statEnum.getState();
-        this.sateInfo = statEnum.getStateInfo();
+        this.stateInfo = statEnum.getStateInfo();
     }
 
     public long getSeckillId() {
@@ -46,12 +46,12 @@ public class SeckillExecution {
         this.state = state;
     }
 
-    public String getSateInfo() {
-        return sateInfo;
+    public String getStateInfo() {
+        return stateInfo;
     }
 
-    public void setSateInfo(String sateInfo) {
-        this.sateInfo = sateInfo;
+    public void setStateInfo(String stateInfo) {
+        this.stateInfo = stateInfo;
     }
 
     public SuccessKilled getSuccessKilled() {
@@ -60,5 +60,15 @@ public class SeckillExecution {
 
     public void setSuccessKilled(SuccessKilled successKilled) {
         this.successKilled = successKilled;
+    }
+
+    @Override
+    public String toString() {
+        return "SeckillExecution{" +
+                "seckillId=" + seckillId +
+                ", state=" + state +
+                ", stateInfo='" + stateInfo + '\'' +
+                ", successKilled=" + successKilled +
+                '}';
     }
 }

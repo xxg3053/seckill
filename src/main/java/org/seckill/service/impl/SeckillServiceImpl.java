@@ -13,6 +13,9 @@ import org.seckill.exception.SeckillException;
 import org.seckill.service.SeckillService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
 
 import java.util.Date;
@@ -21,11 +24,13 @@ import java.util.List;
 /**
  * Created by kenfo on 2016/5/19.
  */
+@Service
 public class SeckillServiceImpl implements SeckillService {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
-
+    @Autowired
     private SeckillDao seckillDao;
+    @Autowired
     private SuccessKilledDao successKilledDao;
     //用于混淆md5
     private final String slat = "asdf09790)*&^sadf@adsf'";//随机
@@ -38,6 +43,11 @@ public class SeckillServiceImpl implements SeckillService {
         return seckillDao.queryById(seckillId);
     }
 
+    /**
+     * 获取秒杀地址
+     * @param seckillId
+     * @return
+     */
     public Exposer exportSeckillUrl(long seckillId) {
         Seckill seckill = seckillDao.queryById(seckillId);
         if(seckill == null){
@@ -56,6 +66,13 @@ public class SeckillServiceImpl implements SeckillService {
         return new Exposer(true,md5,seckillId);
     }
 
+    /**
+     * 使用注解来控制事务方法的有点：
+     * 1：开发团队达成一致约定，明确标注事务方法的编程风格
+     * 2：保证事务方法的执行时间尽可能短，不要穿插其他网络操作，RPC/HTTP请求或者剥离到事务方法之外
+     * 3：不是所有方法都需要事务，如只有一条修改操作，只读操作不需要事务控制。
+     */
+    @Transactional
     public SeckillExecution executeSeckill(long seckillId, long userPhone, String md5) throws SeckillException, RepeateKillException, SeckillCloseException {
         if(md5 == null || !md5.equals(getMd5(seckillId))){
             throw new SeckillException("seckill data rewrite");
